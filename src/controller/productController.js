@@ -22,10 +22,10 @@ const getProducts = (req,res)=>{
 //POST insert a new product
 //1. GET /// all products
 const createProduct = (req,res)=>{
-    const {prodName, prodCategory, prodPrice} = req.body
+    const {prodName, prodCategory, prodPrice,userId} = req.body
     const sql=
-    'INSERT INTO products (prodName, prodCategory, prodPrice) VALUES (?,?,?)'
-    db.query(sql,[prodName, prodCategory, prodPrice],(err,results)=>{
+    'INSERT INTO products (prodName, prodCategory, prodPrice,userId) VALUES (?,?,?,?)'
+    db.query(sql,[prodName, prodCategory, prodPrice,userId],(err,results)=>{
         if(err){
             return res.status(500).json({
                 success: false,
@@ -37,10 +37,10 @@ const createProduct = (req,res)=>{
             data: results})
 
     })
-
+}
 const getOneProduct= (req,res)=>{
     const id =req.params.id
-    const sql ='SELECT * from products where id =?'
+    const sql ='SELECT * from products where prodId =?'
     db.query(sql,[id],(err,results)=>{
         if(err){
             return res.status(500).json({
@@ -54,7 +54,43 @@ const getOneProduct= (req,res)=>{
 
     })
 }
+
+
+const updateOneProduct = (req,res)=>{
+    const {prodName, prodCategory, prodPrice} = req.body
+    const id = req.params.id
+    const sql=
+    'UPDATE products SET prodName=? , prodCategory=?, prodPrice=? WHERE prodId= ?'
+    db.query(sql,[prodName, prodCategory, prodPrice,id],(err,results)=>{
+        if(err){
+            return res.status(500).json({
+                success: false,
+                message: "Error updating product",err})
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Product updated successfully",
+            data: results})
+
+    })
 }
 
 
-module.exports={getProducts, createProduct, getOneProduct}
+const deleteOneProduct= (req,res)=>{
+    const id =req.params.id
+    const sql ='DELETE FROM products where prodId =?'
+    db.query(sql,[id],(err,results)=>{
+        if(err){
+            return res.status(500).json({
+                success: false,
+                message: "Error deleting product",err})
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Product deleted successfully",
+            data: results})
+
+    })
+}
+
+module.exports={getProducts, createProduct, getOneProduct,updateOneProduct,deleteOneProduct}
