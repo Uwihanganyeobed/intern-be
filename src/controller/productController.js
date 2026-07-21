@@ -57,4 +57,4 @@ const getOneProduct= (req,res)=>{
 }
 
 
-module.exports={getProducts, createProduct}
+module.exports={getProducts, createProduct, getOneProduct}
